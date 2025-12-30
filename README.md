@@ -44,6 +44,62 @@ The system organizes documentation into three tiers:
 
 Content automatically **propagates UP** from Tier 3 → Tier 2 → Tier 1, so every tier has complete context (detailed or summarized).
 
+## Workflow Diagrams
+
+### Starting a Session: Which Tier to Read?
+
+```
+What are you working on today?
+            ↓
+    ┌───────┴───────┬──────────────┬─────────────┐
+    │               │              │             │
+Single Project  Multi-Project  Vault Work   Quick Check
+    │               │              │             │
+    ↓               ↓              ↓             ↓
+Read Tier 3     Read Tier 2    Read Tier 1   git log -5
+(~3-5k tokens) (~5-8k tokens) (~10k tokens)  (~1-3k tokens)
+    │               │              │             │
+    ↓               ↓              ↓             ↓
+88% savings     80% savings    60% savings   90%+ savings
+```
+
+**Example:**
+- Working on website project? → Read `projects/website/website-claude.md` (Tier 3)
+- Working on API + frontend? → Read `projects/projects-claude.md` (Tier 2)
+- Organizing documentation? → Read `docs/docs-claude.md` (Tier 1)
+- Just checking what changed? → Run `git log -5 --oneline --stat`
+
+### Ending a Session: Which Tiers to Update?
+
+```
+                    git diff --stat
+                          ↓
+                 Detect areas changed
+                          ↓
+        ┌─────────────────┼──────────────────┐
+        │                 │                  │
+   Single Project    Multi-Project       Vault-Level
+      Work              Work                Work
+        │                 │                  │
+        ↓                 ↓                  ↓
+    Update T3         Update T3s         Update T1
+    Update T2         Update T2           (only)
+    Update T1         Update T1
+        │                 │                  │
+        └─────────────────┼──────────────────┘
+                          ↓
+          Commit all modified session files
+                          ↓
+                   Push to GitHub
+```
+
+**Example:**
+- Changed `projects/website/src/index.html`? → Update Tier 3 (website) + Tier 2 + Tier 1
+- Changed files in both `api/` and `frontend/`? → Update both Tier 3s + Tier 2 + Tier 1
+- Changed `README.md` and `docs/`? → Update Tier 1 only
+
+**The agent handles this automatically!** Just run `@agents/close_and_commit_GIT.md`
+
 ## Features
 
 - ✅ **60-80% token reduction** through smart context loading
